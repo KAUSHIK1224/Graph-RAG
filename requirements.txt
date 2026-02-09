@@ -1,0 +1,10 @@
+neo4j
+python-dotenv
+langchain
+langchain-community
+langchain-experimental
+llama-parse
+wikipedia
+youtube-transcript-api
+gradio
+

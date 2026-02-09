@@ -1,0 +1,122 @@
+{
+  "name": "yfiles-jupyter-graphs",
+  "version": "1.10.10",
+  "description": "A diagram visualization extension for JupyterLab and Jupyter Notebooks powered by yFiles for HTML",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension",
+    "widgets",
+    "yfiles",
+    "visualization",
+    "graph",
+    "diagrams"
+  ],
+  "files": [
+    "lib/**/*.js",
+    "dist/*.js",
+    "css/*.css"
+  ],
+  "homepage": "https://www.yworks.com/products/yfiles-graphs-for-jupyter",
+  "bugs": {
+    "url": "https://github.com/yWorks/yfiles-jupyter-graphs/issues"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "author": {
+    "name": "yWorks Support Team",
+    "email": "yfileshtml@yworks.com"
+  },
+  "main": "lib/index.js",
+  "types": "./lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yWorks/yfiles-jupyter-graphs"
+  },
+  "scripts": {
+    "create-wheel": "yarn clean && python -m build",
+    "git:setup-core-widget-remote": "git remote add core-widget https://vcs.yworks.home/rhodecode/yfiles-jupyter-graphs/yfiles-jupyter-graphs-core && git fetch core-widget && git remote set-url --push core-widget NO_PUSH",
+    "git:merge-core-widget": "git merge -s recursive -X subtree=src/core-widget core-widget/master --allow-unrelated-histories",
+    "build": "yarn build:lib && yarn build:nbextension && yarn build:labextension:dev",
+    "build:prod": "yarn preprocess && yarn build:lib && yarn build:nbextension && yarn build:labextension && yarn postprocess",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "build:lib": "tsc && grunt copy-assets",
+    "build:nbextension": "webpack --mode=production",
+    "build:nbextension:dev": "webpack --mode=development",
+    "clean": "yarn clean:lib && yarn clean:nbextension && yarn clean:labextension",
+    "clean:lib": "rimraf lib",
+    "clean:labextension": "rimraf yfiles_jupyter_graphs/labextension",
+    "clean:nbextension": "rimraf yfiles_jupyter_graphs/nbextension/static/index.js",
+    "lint": "eslint src --ext .ts,.tsx",
+    "local:build": "webpack --config webpack.local.build.config.js",
+    "local:watch": "webpack serve --config webpack.local.build.config.js --open",
+    "prepack": "yarn build:lib",
+    "watch": "npm-run-all -p watch:*",
+    "watch:lib": "tsc -w",
+    "watch:nbextension": "webpack --watch",
+    "watch:labextension": "jupyter labextension watch .",
+    "preprocess": "grunt pre-build",
+    "postprocess": "grunt post-build && cd ./umd/ && npm pack"
+  },
+  "dependencies": {
+    "@ctrl/tinycolor": "3.6.1",
+    "@jupyter-widgets/base": "6.0.11",
+    "@mdi/js": "6.9.96",
+    "leaflet": "1.9.4",
+    "vue": "3.5.20",
+    "vue-json-viewer": "3.0.4",
+    "yfiles": "file:../yfiles-30.0.5-jupyter-widget.tgz"
+  },
+  "devDependencies": {
+    "@babel/core": "7.28.5",
+    "@babel/preset-env": "7.28.5",
+    "@jupyter-widgets/base-manager": "1.0.12",
+    "@jupyterlab/builder": "4.5.2",
+    "@lumino/application": "2.4.5",
+    "@lumino/widgets": "2.7.2",
+    "@types/leaflet": "1.9.21",
+    "@types/resize-observer-browser": "0.1.11",
+    "@types/webpack-env": "1.18.8",
+    "@typescript-eslint/eslint-plugin": "8.50.1",
+    "@typescript-eslint/parser": "8.50.1",
+    "@yworks/optimizer": "1.8.7",
+    "css-loader": "7.1.2",
+    "eslint": "8.57.1",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-prettier": "5.5.4",
+    "eslint-scope": "5.1.1",
+    "grunt": "1.6.1",
+    "grunt-contrib-copy": "1.0.0",
+    "load-grunt-tasks": "5.1.0",
+    "prettier": "3.5.3",
+    "rimraf": "6.1.2",
+    "style-loader": "4.0.0",
+    "ts-loader": "9.5.4",
+    "typescript": "5.8.3",
+    "webpack": "5.104.1",
+    "webpack-cli": "6.0.1",
+    "webpack-dev-server": "5.2.2",
+    "webpack-license-plugin": "4.5.1",
+    "worker-loader": "3.0.8"
+  },
+  "devDependenciesComments": {
+    "@jupyterlab/builder": "pinned to the latest JupyterLab 3.x release",
+    "@lumino/application": "pinned to the latest Lumino 1.x release",
+    "@lumino/widgets": "pinned to the latest Lumino 1.x release"
+  },
+  "jupyterlab": {
+    "extension": "lib/plugin",
+    "webpackConfig": "./webpack.labextension.config.js",
+    "outputDir": "yfiles_jupyter_graphs/labextension/",
+    "sharedPackages": {
+      "@jupyter-widgets/base": {
+        "bundled": false,
+        "singleton": true
+      }
+    },
+    "_build": {
+      "load": "static/remoteEntry.fece53bf96581f859eca.js",
+      "extension": "./extension"
+    }
+  }
+}
